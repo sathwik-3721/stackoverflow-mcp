@@ -31,7 +31,7 @@ stackoverflow-mcp = "stackoverflow_mcp.server:main"
 packages = ["src/stackoverflow_mcp"]
 
 [tool.pytest.ini_options]
-asyncio_mode = "auto"
+pythonpath = ["src"]
 testpaths = ["tests"]
 
 [tool.ruff]
