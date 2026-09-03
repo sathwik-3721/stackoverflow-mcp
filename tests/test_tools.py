@@ -28,7 +28,7 @@ async def test_search_questions_tool():
     res = await search_questions(query="AttributeError", tags=["python"], limit=5)
     assert "# Stack Overflow Results for: `AttributeError`" in res
     assert "Fixing AttributeError in Python" in res
-    assert "✅ Accepted Answer" in res
+    assert "[Accepted Answer]" in res
     assert "`100`" in res
 
 

@@ -158,6 +158,14 @@ class StackExchangeClient:
 
                     response.raise_for_status()
 
+                except httpx.HTTPStatusError as exc:
+                    status = exc.response.status_code
+                    kind = "rate_limited" if status in (403, 429) else "api_error"
+                    raise StackOverflowMCPError(
+                        kind=kind,
+                        message=f"Stack Exchange API HTTP {status}: {exc.response.text[:200]}",
+                        retryable=status in self.RETRYABLE_STATUS_CODES,
+                    )
                 except (httpx.TimeoutException, httpx.TransportError) as exc:
                     last_exception = exc
                     if attempt <= max_retries:
