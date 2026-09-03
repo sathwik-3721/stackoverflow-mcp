@@ -11,6 +11,12 @@ import httpx
 from stackoverflow_mcp.cache import TTLCache
 from stackoverflow_mcp.config import settings
 
+try:
+    import truststore
+    truststore.inject_into_ssl()
+except Exception:
+    pass
+
 logger = logging.getLogger("stackoverflow_mcp.stackexchange")
 
 BASE_URL = "https://api.stackexchange.com/2.3"
