@@ -43,7 +43,7 @@ def _format_search_results(query: str, questions: list[dict[str, Any]]) -> str:
         has_accepted = bool(q.get("accepted_answer_id"))
         tags = q.get("tags", [])
 
-        status_str = "✅ Accepted Answer" if has_accepted else ("✔ Answered" if is_answered else "❌ Unanswered")
+        status_str = "[Accepted Answer]" if has_accepted else ("[Answered]" if is_answered else "[Unanswered]")
         tag_str = ", ".join(f"`{t}`" for t in tags)
 
         output_lines.append(f"### {idx}. [{title}]({link})")
@@ -103,6 +103,13 @@ async def search_questions(
 ) -> str:
     """Search Stack Overflow questions matching a query and optional tags."""
     try:
+        if not query or not query.strip():
+            return json.dumps({
+                "kind": "validation_error",
+                "message": "Search query cannot be empty or whitespace.",
+                "retryable": False,
+            })
+
         client = get_client()
         questions = await client.search_questions(query=query, tags=tags, limit=limit)
         return _format_search_results(query, questions)

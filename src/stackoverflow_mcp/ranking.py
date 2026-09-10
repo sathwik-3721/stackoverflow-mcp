@@ -79,8 +79,13 @@ def normalize_python_error(error: str) -> str:
         lines = [line.strip() for line in text.splitlines() if line.strip()]
         core_line = lines[-1] if lines else text
 
-    # Clean up duplicate whitespace
+    # Clean up duplicate whitespace and cap to 200 characters to avoid API bounds errors
     cleaned = re.sub(r"\s+", " ", core_line).strip()
+    if len(cleaned) > 200:
+        truncated = cleaned[:197]
+        if " " in truncated:
+            truncated = truncated.rsplit(" ", 1)[0]
+        cleaned = truncated + "..."
     return cleaned
 
 
